@@ -4,7 +4,7 @@
 #include <string.h>
 #include <uuid/uuid.h>
 
-#include "linked_list.h"
+#include "user_log_link.h"
 
 // ------------------------------------------------
 // MAIN
