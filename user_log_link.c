@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "linked_list.h"
+#include "user_log_link.h"
 
 // ---------------------------------------
 // LIST INIT

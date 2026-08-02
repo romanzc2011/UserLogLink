@@ -1,5 +1,5 @@
-#ifndef LIST_H_
-#define LIST_H_
+#ifndef LOG_LINK_H_
+#define LOG_LINK_H_
 
 #include <uuid/uuid.h>
 
