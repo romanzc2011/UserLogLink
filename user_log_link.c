@@ -27,22 +27,22 @@ UserList *list_init(void)
 // ---------------------------------------
 UserList *list_insert(
     UserList *list,
-    char *username,
-    uuid_t *node_uuid
+    char *username
 )
 {
     UserList *new_list;
+    FILE *fp;
+
+    fp = fopen("./users_data", "a");
+
+    if (fp == NULL) {
+        perror("fopen");
+        exit(EXIT_FAILURE);
+    }
     
     // Alloc memory for UserList
     new_list = malloc(sizeof(UserList));
     if (new_list == NULL) {
-        perror("malloc");
-        exit(EXIT_FAILURE);
-    }
-
-    // Alloc memory for uuid
-    node_uuid = malloc(sizeof(uuid_t));
-    if (node_uuid == NULL) {
         perror("malloc");
         exit(EXIT_FAILURE);
     }
@@ -60,9 +60,36 @@ UserList *list_insert(
 }
 
 // ---------------------------------------
+// LIST SIZE
+// ---------------------------------------
+int list_size(void)
+{
+    FILE *fp;
+    fp = fopen("./user_uuid", "a");
+
+    if (fp == NULL) {
+        perror("fopen");
+        exit(EXIT_FAILURE);
+    }
+}
+
+// ---------------------------------------
 // PRINT LIST
 // ---------------------------------------
 void print_list(UserList *user_list, uuid_t *node_uuid)
 {
 
 }
+
+// ---------------------------------------
+// PRINT HELP
+// ---------------------------------------
+void print_help(FILE *stream, const char *pgm_name, int exit_code)
+{
+    fprintf(stream, "Usage: %s options\n", pgm_name);
+    fprintf(stream, 
+        "-u  --username   Username to be added.\n"
+        "-h  --help  Help\n"
+    );
+    exit(exit_code);
+}  

@@ -16,7 +16,7 @@ int main(int argc, char *argv[])
     char buffer[256];
 
     // Short option letters for cli params
-    const char *short_option = "qu:";
+    const char *short_option = "hu:";
 
     // format the program name properly
     /* We retrieved the last occurence of / and then
@@ -24,7 +24,7 @@ int main(int argc, char *argv[])
     pgm_name = strrchr(argv[0], '/');
     *pgm_name++;
 
-    if (argc != 2) {
+    if (argc < 2) {
         fprintf(stderr, "usage: %s -u username\n", pgm_name);
         exit(EXIT_FAILURE);
     }
@@ -32,52 +32,45 @@ int main(int argc, char *argv[])
     // ------------------------------------------------    
     // MAIN SUPER LOOP
     // ------------------------------------------------
-    while(1) {
 
-        // List of valid short opts
-        static const struct option long_options[] = {
-            {"username", required_argument, NULL, 'u'},
-            {"quit",     no_argument,       NULL, 'q'},
-            {0, 0, 0, 0}
-        };
+    // List of valid short opts
+    static const struct option long_options[] = {
+        {"username", required_argument, NULL, 'u'},
+        {"help",     no_argument,       NULL, 'h'},
+        {0, 0, 0, 0}
+    };
 
-        // Get username from clip and assign to username variable
-        int opt;
-        while ((opt = getopt_long(argc, argv, short_option, long_options, NULL)) != -1) {
-            switch (opt) {
-                // USERNAME
-                case 'u':
-                    size_t username_len = strlen(optarg) + 1;
-                    char *username = malloc(username_len);
-                    
-                    // Capture failure and report
-                    if (username == NULL) {
-                        perror("malloc");
-                        exit(EXIT_FAILURE);
-                    }
+    // Get username from clip and assign to username variable
+    int opt;
+    while ((opt = getopt_long(argc, argv, short_option, long_options, NULL)) != -1) {
 
-                    strncpy(username, optarg, username_len);
-                    break;
+        switch (opt) {
+            // USERNAME
+            case 'u': {
+                size_t username_len = strlen(optarg) + 1; 
+                char *username = malloc(username_len);
                 
-                // QUIT
-                case 'q':
-                    exit(EXIT_SUCCESS);
+                // Capture failure and report
+                if (username == NULL) {
+                    perror("malloc");
+                    exit(EXIT_FAILURE);
+                }
+
+                strncpy(username, optarg, username_len);
+                printf("USERNAME: %s\n", username);
+                break;
             }
+                
+            // HELP
+            case 'h':
+                print_help(stdout, pgm_name, EXIT_SUCCESS);
+                break;
+            
+            default:
+                print_help(stderr, pgm_name, EXIT_FAILURE);
         }
-
-        size_t username_len = strlen(argv[1]) + 1;
-
-        // alloc memory for username and extract from optarg
-        char *username = malloc(username_len);
-        if (username == NULL) {
-            perror("malloc");
-            return EXIT_FAILURE;
-        }
-        strncpy(username, argv[1], username_len);
-        printf("username: %s\n\n", username);
     }
    
     free(list);
-
     return EXIT_SUCCESS;
 }
