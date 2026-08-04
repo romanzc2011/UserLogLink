@@ -15,7 +15,7 @@ typedef struct UserList
 // FUNCTIONS
 // ---------------------------------------------------
 UserList *list_init(void);
-UserList *list_insert(UserList *list, char *username);
+UserList *add_to_list(UserList *list, char *username);
 int list_delete(UserList *user_list);
 int list_size(void);
 void print_list(UserList *user_list, uuid_t *node_uuid);

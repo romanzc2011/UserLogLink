@@ -1,3 +1,4 @@
+#include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -25,38 +26,23 @@ UserList *list_init(void)
 // ---------------------------------------
 // LIST INSERT
 // ---------------------------------------
-UserList *list_insert(
-    UserList *list,
-    char *username
-)
+UserList *add_to_list(UserList *node, char *username)
 {
-    UserList *new_list;
-    FILE *fp;
-
-    fp = fopen("./users_data", "a");
-
-    if (fp == NULL) {
-        perror("fopen");
-        exit(EXIT_FAILURE);
-    }
+    UserList *new_node;
     
     // Alloc memory for UserList
-    new_list = malloc(sizeof(UserList));
-    if (new_list == NULL) {
+    new_node = malloc(sizeof(UserList));
+    if (new_node == NULL) {
         perror("malloc");
         exit(EXIT_FAILURE);
     }
 
     // Copy username to list username element
-    strncpy(new_list->username, username, (strlen(username) + 1));
-    uuid_generate(new_list->node_uuid);
-    
-    // Point next to the new list if there is already a list
-    if (!(list == NULL)) {
-        list->next = new_list;
-    }
+    strncpy(new_node->username, username, (strlen(username) + 1));
+    uuid_generate(new_node->node_uuid);
+    new_node->next = node;        
 
-    return new_list;
+    return new_node;
 }
 
 // ---------------------------------------
@@ -64,13 +50,21 @@ UserList *list_insert(
 // ---------------------------------------
 int list_size(void)
 {
+    // Open file stream and count uuids for list size
     FILE *fp;
+    char buffer[256];
     fp = fopen("./user_uuid", "a");
 
     if (fp == NULL) {
         perror("fopen");
         exit(EXIT_FAILURE);
     }
+
+    while ((fgets(buffer, 256, fp)) != EOF) {
+        printf("UUID: %s\n", buffer);
+    }
+
+    return 0;
 }
 
 // ---------------------------------------

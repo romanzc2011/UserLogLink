@@ -11,9 +11,18 @@
 // ------------------------------------------------
 int main(int argc, char *argv[])
 {
+    // VARIABLES
     UserList *list = NULL;
-    char *pgm_name;
-    char buffer[256];
+
+    char *pgm_name = NULL;
+    char *username = NULL;
+    char *code = NULL;
+    char buffer[8] = {0};
+    char usrnme_buf[100] = {0}; 
+    
+    size_t username_len = 0;
+    int opt = 0;
+    int c = 0;
 
     // Short option letters for cli params
     const char *short_option = "hu:";
@@ -24,15 +33,6 @@ int main(int argc, char *argv[])
     pgm_name = strrchr(argv[0], '/');
     *pgm_name++;
 
-    if (argc < 2) {
-        fprintf(stderr, "usage: %s -u username\n", pgm_name);
-        exit(EXIT_FAILURE);
-    }
-
-    // ------------------------------------------------    
-    // MAIN SUPER LOOP
-    // ------------------------------------------------
-
     // List of valid short opts
     static const struct option long_options[] = {
         {"username", required_argument, NULL, 'u'},
@@ -40,37 +40,54 @@ int main(int argc, char *argv[])
         {0, 0, 0, 0}
     };
 
-    // Get username from clip and assign to username variable
-    int opt;
-    while ((opt = getopt_long(argc, argv, short_option, long_options, NULL)) != -1) {
+    // ------------------------------------------------    
+    // MAIN SUPER LOOP
+    // ------------------------------------------------
+    while(1)
+    {
+        // Get user data to insert into user log list
+        printf("Enter operation code: ");
+        fgets(buffer, sizeof(buffer), stdin);
 
-        switch (opt) {
-            // USERNAME
-            case 'u': {
-                size_t username_len = strlen(optarg) + 1; 
-                char *username = malloc(username_len);
-                
+        switch(buffer[0]) {
+            case 'a': {
+                // Get username from user
+                printf("Enter username: ");
+                fgets(usrnme_buf, sizeof(usrnme_buf), stdin);
+
+                username_len = strlen(usrnme_buf) + 1;
+                username = malloc(username_len);
+
                 // Capture failure and report
                 if (username == NULL) {
                     perror("malloc");
                     exit(EXIT_FAILURE);
                 }
-
-                strncpy(username, optarg, username_len);
-                printf("USERNAME: %s\n", username);
+                
+                strncpy(username, usrnme_buf, username_len);
                 break;
             }
                 
-            // HELP
-            case 'h':
-                print_help(stdout, pgm_name, EXIT_SUCCESS);
+
+            case 'd':
                 break;
-            
-            default:
-                print_help(stderr, pgm_name, EXIT_FAILURE);
         }
+
+        // Save current list to file
+        FILE *fd = fopen("./users_data", "a");
+        if (!fd) {
+            perror("fopen");
+            exit(EXIT_FAILURE);
+        }
+
+        fprintf(fd, "%s\n", username);
+        fclose(fd);
+
     }
-   
+
+    
+
+
     free(list);
     return EXIT_SUCCESS;
 }
