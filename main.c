@@ -4,7 +4,7 @@
 #include <string.h>
 #include <uuid/uuid.h>
 
-#include "user_log_link.h"
+#include "user_node_link.h"
 
 // ------------------------------------------------
 // MAIN
@@ -12,7 +12,10 @@
 int main(int argc, char *argv[])
 {
     // VARIABLES
-    UserList *list = NULL;
+    UserNode *user_node = user_node_init();
+
+    uuid_t user_uuid;
+    memset(user_uuid, 0, sizeof(uuid_t));
 
     char *pgm_name = NULL;
     char *username = NULL;
@@ -24,28 +27,18 @@ int main(int argc, char *argv[])
     int opt = 0;
     int c = 0;
 
-    // Short option letters for cli params
-    const char *short_option = "hu:";
-
     // format the program name properly
     /* We retrieved the last occurence of / and then
         we got the mem address and moved it u*/
     pgm_name = strrchr(argv[0], '/');
     *pgm_name++;
 
-    // List of valid short opts
-    static const struct option long_options[] = {
-        {"username", required_argument, NULL, 'u'},
-        {"help",     no_argument,       NULL, 'h'},
-        {0, 0, 0, 0}
-    };
-
     // ------------------------------------------------    
     // MAIN SUPER LOOP
     // ------------------------------------------------
     while(1)
     {
-        // Get user data to insert into user log list
+        // Get user data to insert into user log user_log
         printf("Enter operation code: ");
         fgets(buffer, sizeof(buffer), stdin);
 
@@ -64,16 +57,33 @@ int main(int argc, char *argv[])
                     exit(EXIT_FAILURE);
                 }
                 
-                strncpy(username, usrnme_buf, username_len);
+                // Strip trailing new if present
+                size_t len = strlen(usrnme_buf);
+                if (len > 0 && usrnme_buf[len - 1] == '\n') {
+                    usrnme_buf[len - 1] = '\0';
+                    strncpy(username, usrnme_buf, username_len);
+                }
+
+                // Add user node data to list
+                add_user_node(user_node, username);
+
                 break;
             }
-                
 
+            case 'p':
+                break;
+                
             case 'd':
                 break;
+            
+            case 'q':
+                exit(EXIT_SUCCESS);
         }
 
-        // Save current list to file
+        // Insert the new data into the
+
+
+        // Save current user_log to file
         FILE *fd = fopen("./users_data", "a");
         if (!fd) {
             perror("fopen");
@@ -85,9 +95,6 @@ int main(int argc, char *argv[])
 
     }
 
-    
-
-
-    free(list);
+    free(user_node);
     return EXIT_SUCCESS;
 }

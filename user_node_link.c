@@ -1,56 +1,61 @@
-#include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-#include "user_log_link.h"
+#include "user_node_link.h"
 
 // ---------------------------------------
-// LIST INIT
+// USER NOCF INIT
 // ---------------------------------------
-UserList *list_init(void)
+UserNode *user_node_init(void)
 {
-    UserList *list;
+    UserNode *user_node;
+    user_node = malloc(sizeof(UserNode));
 
-    if ((list = malloc(sizeof(UserList))) == NULL) {
+    if (user_node == NULL) {
         perror("malloc");
         exit(EXIT_FAILURE);
     }
 
-    memset(list->node_uuid, 0, sizeof(uuid_t *));
-    list->next = NULL;
+    user_node->username = NULL;
+    memset(user_node->node_uuid, 0, sizeof(uuid_t));
+    user_node->next = NULL;
  
-    return list;
+    return user_node;
 }
 
 // ---------------------------------------
-// LIST INSERT
+// ADD USER NODE INSERT
 // ---------------------------------------
-UserList *add_to_list(UserList *node, char *username)
+void add_user_node(UserNode *user_node, char *username)
 {
-    UserList *new_node;
+    UserNode *new_node;
     
-    // Alloc memory for UserList
-    new_node = malloc(sizeof(UserList));
+    // Alloc memory for UserNode
+    new_node = malloc(sizeof(UserNode));
     if (new_node == NULL) {
         perror("malloc");
         exit(EXIT_FAILURE);
     }
 
-    // Copy username to list username element
+    new_node->username = malloc(strlen(username) + 1);
+    if (new_node->username == NULL) {
+        perror("malloc");
+        exit(EXIT_FAILURE);
+    }
+
+    // Copy username to user_node username element
     strncpy(new_node->username, username, (strlen(username) + 1));
     uuid_generate(new_node->node_uuid);
-    new_node->next = node;        
-
-    return new_node;
+    user_node->next = new_node;        
 }
 
 // ---------------------------------------
-// LIST SIZE
+// USER NODE SIZE
 // ---------------------------------------
-int list_size(void)
+int user_node_size(void)
 {
-    // Open file stream and count uuids for list size
+    // Open file stream and count uuids for user_node size
     FILE *fp;
     char buffer[256];
     fp = fopen("./user_uuid", "a");
@@ -68,9 +73,9 @@ int list_size(void)
 }
 
 // ---------------------------------------
-// PRINT LIST
+// PRINT user_node
 // ---------------------------------------
-void print_list(UserList *user_list, uuid_t *node_uuid)
+void print_user_node(UserNode *user_user_node, uuid_t *node_uuid)
 {
 
 }
