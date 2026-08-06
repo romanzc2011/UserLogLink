@@ -1,4 +1,3 @@
-#include <getopt.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -9,18 +8,19 @@
 // ------------------------------------------------
 // MAIN
 // ------------------------------------------------
+#include <getopt.h>
 int main(int argc, char *argv[])
 {
     // VARIABLES
     UserNode *user_node = user_node_init();
-
-    uuid_t user_uuid;
-    memset(user_uuid, 0, sizeof(uuid_t));
+    UserNode *new_node = malloc(sizeof(UserNode));
+    FILE *fp;
 
     char *pgm_name = NULL;
     char *username = NULL;
     char *code = NULL;
     char buffer[8] = {0};
+    char uuid_str[37] = {0};
     char usrnme_buf[100] = {0}; 
     
     size_t username_len = 0;
@@ -43,6 +43,7 @@ int main(int argc, char *argv[])
         fgets(buffer, sizeof(buffer), stdin);
 
         switch(buffer[0]) {
+
             case 'a': {
                 // Get username from user
                 printf("Enter username: ");
@@ -65,33 +66,39 @@ int main(int argc, char *argv[])
                 }
 
                 // Add user node data to list
-                add_user_node(user_node, username);
+                new_node = add_user_node(user_node, username);
 
+                // Open users_data to write the new node to file to save
+                fp = fopen("./users_data", "a");
+                if (fp == NULL) {
+                    perror("fopen");
+                    exit(EXIT_FAILURE);
+                }
+
+                // Now write the data struct data
+                fprintf(fp, "%s", DATA_DIVIDER);
+                fprintf(fp, "USERNAME: %s\n", username);
+                fprintf(fp, "UUID: %s\n", new_node->uuid_str);
+                fprintf(fp, "%s", DATA_DIVIDER);
+                fclose(fp);
+
+                free(username);
                 break;
             }
 
+            // PRINT USAGE
             case 'p':
                 break;
-                
+              
+            // DELETE NODE
             case 'd':
                 break;
             
+            // QUIT
             case 'q':
                 exit(EXIT_SUCCESS);
         }
 
-        // Insert the new data into the
-
-
-        // Save current user_log to file
-        FILE *fd = fopen("./users_data", "a");
-        if (!fd) {
-            perror("fopen");
-            exit(EXIT_FAILURE);
-        }
-
-        fprintf(fd, "%s\n", username);
-        fclose(fd);
 
     }
 

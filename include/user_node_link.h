@@ -3,11 +3,14 @@
 
 #include <uuid/uuid.h>
 
+#define DATA_DIVIDER    "################################################################\n"
+
 // USER NODE STRUCT
 typedef struct UserNode
 {
-    uuid_t node_uuid;
     char *username;
+    uuid_t node_uuid;
+    char uuid_str[37];
     struct UserNode *next;
 } UserNode;
 
@@ -15,7 +18,7 @@ typedef struct UserNode
 // FUNCTIONS
 // ---------------------------------------------------
 UserNode *user_node_init(void);
-void add_user_node(UserNode *user_node, char *username);
+UserNode *add_user_node(UserNode *user_node, char *username);
 int user_delete(UserNode *user_node);
 int user_list_size(void);
 void print_user_node_list(UserNode *user_node, uuid_t node_uuid);

@@ -18,6 +18,7 @@ UserNode *user_node_init(void)
     }
 
     user_node->username = NULL;
+    memset(user_node->uuid_str, 0, 37);
     memset(user_node->node_uuid, 0, sizeof(uuid_t));
     user_node->next = NULL;
  
@@ -27,7 +28,7 @@ UserNode *user_node_init(void)
 // ---------------------------------------
 // ADD USER NODE INSERT
 // ---------------------------------------
-void add_user_node(UserNode *user_node, char *username)
+UserNode *add_user_node(UserNode *user_node, char *username)
 {
     UserNode *new_node;
     
@@ -47,7 +48,11 @@ void add_user_node(UserNode *user_node, char *username)
     // Copy username to user_node username element
     strncpy(new_node->username, username, (strlen(username) + 1));
     uuid_generate(new_node->node_uuid);
-    user_node->next = new_node;        
+    // Convert binary uuid into human reable form
+    uuid_unparse(new_node->node_uuid, new_node->uuid_str);
+    user_node->next = new_node;
+    
+    return new_node;
 }
 
 // ---------------------------------------
