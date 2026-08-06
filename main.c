@@ -79,7 +79,7 @@ int main(int argc, char *argv[])
                 fprintf(fp, "%s", DATA_DIVIDER);
                 fprintf(fp, "USERNAME: %s\n", username);
                 fprintf(fp, "UUID: %s\n", new_node->uuid_str);
-                fprintf(fp, "%s", DATA_DIVIDER);
+                fprintf(fp, "%s\n", DATA_DIVIDER);
                 fclose(fp);
 
                 free(username);

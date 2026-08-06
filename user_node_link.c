@@ -48,6 +48,7 @@ UserNode *add_user_node(UserNode *user_node, char *username)
     // Copy username to user_node username element
     strncpy(new_node->username, username, (strlen(username) + 1));
     uuid_generate(new_node->node_uuid);
+
     // Convert binary uuid into human reable form
     uuid_unparse(new_node->node_uuid, new_node->uuid_str);
     user_node->next = new_node;
@@ -58,23 +59,12 @@ UserNode *add_user_node(UserNode *user_node, char *username)
 // ---------------------------------------
 // USER NODE SIZE
 // ---------------------------------------
-int user_node_size(void)
+int user_node_size(UserNode *user_list)
 {
-    // Open file stream and count uuids for user_node size
-    FILE *fp;
-    char buffer[256];
-    fp = fopen("./user_uuid", "a");
-
-    if (fp == NULL) {
-        perror("fopen");
-        exit(EXIT_FAILURE);
+    UserNode *node;
+    for(node = user_list; node != NULL; node = node->next) {
+        
     }
-
-    while ((fgets(buffer, 256, fp)) != EOF) {
-        printf("UUID: %s\n", buffer);
-    }
-
-    return 0;
 }
 
 // ---------------------------------------
