@@ -5,12 +5,14 @@
 
 #define DATA_DIVIDER    "--------------------------------------------------------------------------\n"
 
+
 // USER NODE STRUCT
 typedef struct UserNode
 {
     char *username;
     uuid_t node_uuid;
     char uuid_str[37];
+    char timestamp[80];
     struct UserNode *next;
 } UserNode;
 

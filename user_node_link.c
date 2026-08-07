@@ -19,6 +19,7 @@ UserNode *user_node_init(void)
 
     user_node->username = NULL;
     memset(user_node->uuid_str, 0, 37);
+    memset(user_node->timestamp, 0, 80);
     memset(user_node->node_uuid, 0, sizeof(uuid_t));
     user_node->next = NULL;
  
@@ -31,7 +32,10 @@ UserNode *user_node_init(void)
 UserNode *add_user_node(UserNode *user_node, char *username)
 {
     UserNode *new_node;
-    
+
+    time_t now = time(NULL);
+    struct tm *time_info = localtime(&now);
+
     // Alloc memory for UserNode
     new_node = malloc(sizeof(UserNode));
     if (new_node == NULL) {
@@ -48,6 +52,7 @@ UserNode *add_user_node(UserNode *user_node, char *username)
     // Copy username to user_node username element
     strncpy(new_node->username, username, (strlen(username) + 1));
     uuid_generate(new_node->node_uuid);
+    strftime(new_node->timestamp, sizeof(new_node->timestamp), "%Y-%m-%d %H:%M:%S", time_info);
 
     // Convert binary uuid into human reable form
     uuid_unparse(new_node->node_uuid, new_node->uuid_str);

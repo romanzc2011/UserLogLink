@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 #include <uuid/uuid.h>
 
 #include "user_node_link.h"
@@ -38,12 +39,11 @@ int main(int argc, char *argv[])
     // ------------------------------------------------
     while(1)
     {
-        // Get user data to insert into user log user_log
+        // Get user data to insert into user log user_log an)
         printf("Enter operation code: ");
         fgets(buffer, sizeof(buffer), stdin);
 
         switch(buffer[0]) {
-
             case 'a': {
                 // Get username from user
                 printf("Enter username: ");
@@ -79,6 +79,7 @@ int main(int argc, char *argv[])
                 fprintf(fp, "%s", DATA_DIVIDER);
                 fprintf(fp, "USERNAME: %s\n", username);
                 fprintf(fp, "UUID: %s\n", new_node->uuid_str);
+                fprintf(fp, "TIMESTAMP: %s\n", new_node->timestamp);
                 fprintf(fp, "%s\n", DATA_DIVIDER);
                 fclose(fp);
 
